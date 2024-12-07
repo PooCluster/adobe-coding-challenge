@@ -7,7 +7,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -32,11 +34,27 @@ public class Main {
             this.entryDate = entryDate;
         }
 
+        public JSONObject toJSONObject() {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("_id", id);
+            jsonObject.put("email", email);
+            jsonObject.put("firstName", firstName);
+            jsonObject.put("lastName", lastName);
+            jsonObject.put("address", address);
+            jsonObject.put("entryDate", entryDate);
+            return jsonObject;
+        }
+
         @Override
         public String toString() {
-            return "Lead:{id:" + id + ",email:" + email +
-                    ",firstName:" + firstName + ",lastName:" + lastName +
-                    ",address:" + address + ",entryDate:" + entryDate + "}";
+            // JSON-formatted
+            return "{\n" +
+                "\"_id\": \"" + id + "\",\n" +
+                "\"email\": \"" + email + "\",\n" +
+                "\"firstName\": \"" + firstName + "\",\n" +
+                "\"lastName\": \"" + lastName + "\",\n" +
+                "\"ddress\": \"" + address + "\",\n" +
+                "\"entryDate\": \"" + entryDate + "\"\n}";
         }
     }
 
@@ -66,6 +84,21 @@ public class Main {
         return leads;
     }
 
+    private static List<Lead> removeDuplicates(List<Lead> leads) {
+        List<Lead> noDupsLeads = new ArrayList<>();
+        Map<String, Lead> seenIds = new HashMap<>();
+        Map<String, Lead> seenEmails = new HashMap<>();
+
+        // TODO: fill out logic doing a one pass of leads list finding dups (ids/emails)
+
+        return noDupsLeads;
+    }
+
+    private static void outputResults(List<Lead> leads) {
+        String jsonString = "{\"leads\":" + leads.toString() + "\n}";
+        System.out.println(jsonString);
+    }
+
     public static void main(String[] args) throws IOException {
         // file to remove duplicates; TODO: take it from String[] args
         String fileName = "leads.json";
@@ -75,5 +108,11 @@ public class Main {
 
         System.out.println("[STEP 2]: Transform JSONObject to a list of Leads");
         List<Lead> leads = jsonObjectToList(jsonObject);
+
+        System.out.println("[STEP 3]: Remove duplicates from the list of Leads");
+        List<Lead> noDupsLeads = removeDuplicates(leads);
+
+        System.out.println("[STEP 4]: Output the results!");
+        outputResults(leads);
     }
 }
