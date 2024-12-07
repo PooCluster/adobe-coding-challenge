@@ -1,0 +1,96 @@
+CHANGE LOGS:
+--- START CHANGE LOG ---
+from {
+"_id": "jkj238238jdsnfsj23",
+"email": "foo@bar.com",
+"firstName": "John",
+"lastName": "Smith",
+"ddress": "123 Street St",
+"entryDate": "2014-05-07T17:30:20+00:00"
+}
+to   {
+"_id": "jkj238238jdsnfsj23",
+"email": "coo@bar.com",
+"firstName": "Ted",
+"lastName": "Jones",
+"ddress": "456 Neat St",
+"entryDate": "2014-05-07T17:32:20+00:00"
+}
+email: foo@bar.com -> coo@bar.com
+---  END CHANGE LOG  ---
+--- START CHANGE LOG ---
+from {
+"_id": "sel045238jdsnfsj23",
+"email": "foo@bar.com",
+"firstName": "John",
+"lastName": "Smith",
+"ddress": "123 Street St",
+"entryDate": "2014-05-07T17:32:20+00:00"
+}
+to   {
+"_id": "qest38238jdsnfsj23",
+"email": "foo@bar.com",
+"firstName": "John",
+"lastName": "Smith",
+"ddress": "123 Street St",
+"entryDate": "2014-05-07T17:32:20+00:00"
+}
+id:    sel045238jdsnfsj23 -> qest38238jdsnfsj23
+---  END CHANGE LOG  ---
+--- START CHANGE LOG ---
+from {
+"_id": "qest38238jdsnfsj23",
+"email": "foo@bar.com",
+"firstName": "John",
+"lastName": "Smith",
+"ddress": "123 Street St",
+"entryDate": "2014-05-07T17:32:20+00:00"
+}
+to   {
+"_id": "wuj08238jdsnfsj23",
+"email": "foo@bar.com",
+"firstName": "Micah",
+"lastName": "Valmer",
+"ddress": "123 Street St",
+"entryDate": "2014-05-07T17:33:20+00:00"
+}
+id:    qest38238jdsnfsj23 -> wuj08238jdsnfsj23
+---  END CHANGE LOG  ---
+--- START CHANGE LOG ---
+from {
+"_id": "edu45238jdsnfsj23",
+"email": "mae@bar.com",
+"firstName": "Ted",
+"lastName": "Masters",
+"ddress": "44 North Hampton St",
+"entryDate": "2014-05-07T17:31:20+00:00"
+}
+to   {
+"_id": "belr28238jdsnfsj23",
+"email": "mae@bar.com",
+"firstName": "Tallulah",
+"lastName": "Smith",
+"ddress": "123 Water St",
+"entryDate": "2014-05-07T17:33:20+00:00"
+}
+id:    edu45238jdsnfsj23 -> belr28238jdsnfsj23
+---  END CHANGE LOG  ---
+--- START CHANGE LOG ---
+from {
+"_id": "jkj238238jdsnfsj23",
+"email": "coo@bar.com",
+"firstName": "Ted",
+"lastName": "Jones",
+"ddress": "456 Neat St",
+"entryDate": "2014-05-07T17:32:20+00:00"
+}
+to   {
+"_id": "jkj238238jdsnfsj23",
+"email": "bill@bar.com",
+"firstName": "John",
+"lastName": "Smith",
+"ddress": "888 Mayberry St",
+"entryDate": "2014-05-07T17:33:20+00:00"
+}
+email: coo@bar.com -> bill@bar.com
+---  END CHANGE LOG  ---

@@ -1,0 +1,20 @@
+CHANGE LOGS:
+--- START CHANGE LOG ---
+from {
+"_id": "1",
+"email": "test1@example.com",
+"firstName": "John",
+"lastName": "Smith",
+"ddress": "123 Street St",
+"entryDate": "2014-05-07T17:30:20+00:00"
+}
+to   {
+"_id": "2",
+"email": "test1@example.com",
+"firstName": "Ted",
+"lastName": "Masters",
+"ddress": "44 North Hampton St",
+"entryDate": "2014-05-07T17:31:20+00:00"
+}
+id:    1 -> 2
+---  END CHANGE LOG  ---
