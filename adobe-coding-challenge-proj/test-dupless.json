@@ -1,0 +1,16 @@
+{"leads":[{
+"_id": "2",
+"email": "test1@example.com",
+"firstName": "Ted",
+"lastName": "Masters",
+"ddress": "44 North Hampton St",
+"entryDate": "2014-05-07T17:31:20+00:00"
+}, {
+"_id": "1",
+"email": "test2@example.com",
+"firstName": "Fran",
+"lastName": "Jones",
+"ddress": "8803 Dark St",
+"entryDate": "2014-05-07T17:31:20+00:00"
+}]
+}

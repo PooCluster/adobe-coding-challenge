@@ -6,9 +6,23 @@ import org.json.JSONObject;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
+
+    public static class LeadChangeLogPair {
+        public List<Lead> leads;
+        public List<ChangeLog> changeLogs;
+
+        // default constructor cannot be used
+        private LeadChangeLogPair() {}
+
+        public LeadChangeLogPair(List<Lead> leads, List<ChangeLog> changeLogs) {
+            this.leads = leads;
+            this.changeLogs = changeLogs;
+        }
+    }
 
     private static JSONObject fileNameToJSONObject(String fileName) throws IOException {
         if (new File(fileName).exists()) {
@@ -36,15 +50,18 @@ public class Main {
         return leads;
     }
 
-    private static void printChangeLogs(List<ChangeLog> changeLogs) {
-        System.out.println("CHANGE LOGS:");
+    private static void printChangeLogs(List<ChangeLog> changeLogs, String inFileName) throws IOException {
+        String outputString = "CHANGE LOGS:\n";
         for (ChangeLog changeLog : changeLogs) {
-            System.out.println(changeLog);
+            outputString += changeLog.toString() + "\n";
         }
-        System.out.println();
+        System.out.println(outputString);
+
+        String outFileName = inFileName.substring(0, inFileName.lastIndexOf('.')) + "-changelog.txt";
+        Files.write(Paths.get(outFileName), outputString.getBytes());
     }
 
-    private static List<Lead> removeDuplicates(List<Lead> leads) {
+    private static LeadChangeLogPair removeDuplicates(List<Lead> leads) {
         /*
         HERE IS MY ASSUMPTION OF THE RULES:
         Duplicate IDs are dups. Duplicate emails are dups. *Both* are unique in that
@@ -136,19 +153,21 @@ public class Main {
             }
         }
 
-        printChangeLogs(changeLogs);
-
-        return noDupsLeads;
+        return new LeadChangeLogPair(noDupsLeads, changeLogs);
     }
 
-    private static void outputResults(List<Lead> leads) {
+    private static void outputResults(List<Lead> leads, String inFileName) throws IOException {
+        String outFileName = inFileName.substring(0, inFileName.lastIndexOf('.')) + "-dupless.json";
         String jsonString = "{\"leads\":" + leads.toString() + "\n}";
-        System.out.println(jsonString);
+        Files.write(Paths.get(outFileName), jsonString.getBytes());
     }
 
     public static void main(String[] args) throws IOException {
-        // file to remove duplicates; TODO: take it from String[] args
-        String fileName = "leads.json";
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Provide a json file as a parameter to the program. ex) \"leads.json\"");
+        }
+
+        String fileName = args[0];
 
         System.out.println("[STEP 1]: Getting JSON data from file: " + fileName);
         JSONObject jsonObject = fileNameToJSONObject(fileName);
@@ -157,9 +176,12 @@ public class Main {
         List<Lead> leads = jsonObjectToList(jsonObject);
 
         System.out.println("[STEP 3]: Remove duplicates from the list of Leads");
-        List<Lead> noDupsLeads = removeDuplicates(leads);
+        LeadChangeLogPair leadChangelogPair = removeDuplicates(leads);
+        List<Lead> noDupsLeads = leadChangelogPair.leads;
+        List<ChangeLog> changeLogs = leadChangelogPair.changeLogs;
 
         System.out.println("[STEP 4]: Output the results!");
-        outputResults(noDupsLeads);
+        printChangeLogs(changeLogs, fileName);
+        outputResults(noDupsLeads, fileName);
     }
 }
