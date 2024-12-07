@@ -11,6 +11,7 @@ import java.util.*;
 
 public class Main {
 
+    // A pair class holding a resulting list of leads and the change logs required to get the resulting list.
     public static class LeadChangeLogPair {
         public List<Lead> leads;
         public List<ChangeLog> changeLogs;
@@ -24,6 +25,14 @@ public class Main {
         }
     }
 
+    /*
+     * Creates a JSON object from a file name.
+     *
+     * @param fileName The JSON-formatted file.
+     * @return The JSON object.
+     * @throws IOException If there is an error with file reading.
+     * @throws FileNotFoundException If the file does not exist.
+     */
     private static JSONObject fileNameToJSONObject(String fileName) throws IOException {
         if (new File(fileName).exists()) {
             String jsonString = Files.readString(Path.of(fileName));
@@ -33,9 +42,15 @@ public class Main {
         }
     }
 
-    private static List<Lead> jsonObjectToList(JSONObject jsonObject) {
+    /*
+     * Transforms a leads-containing JSON object into a list of leads.
+     *
+     * @param leadsJsonObject The lead-containing JSON object.
+     * @return The list of leads.
+     */
+    private static List<Lead> jsonObjectToList(JSONObject leadsJsonObject) {
         List<Lead> leads = new ArrayList<>();
-        JSONArray jsonArray = jsonObject.getJSONArray("leads");
+        JSONArray jsonArray = leadsJsonObject.getJSONArray("leads");
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonLead = jsonArray.getJSONObject(i);
             leads.add(new Lead(
@@ -50,7 +65,13 @@ public class Main {
         return leads;
     }
 
-    private static void printChangeLogs(List<ChangeLog> changeLogs, String inFileName) throws IOException {
+    /*
+     * Prints list of change logs in both the output window and a file based relevant to the original file.
+     *
+     * @param leads The list of leads.
+     * @param inFileName The original JSON file name.
+     */
+    private static void outputChangeLogs(List<ChangeLog> changeLogs, String inFileName) throws IOException {
         String outputString = "CHANGE LOGS:\n";
         for (ChangeLog changeLog : changeLogs) {
             outputString += changeLog.toString() + "\n";
@@ -61,35 +82,43 @@ public class Main {
         Files.write(Paths.get(outFileName), outputString.getBytes());
     }
 
+    /*
+     * This algorithm takes a list of leads, and produces a list of leads without duplicates along
+     * with change logs recording the necessary changes to needed to get from the list of leads to
+     * a list of leads without duplicates.
+     *
+     * Here is a further breakdown of the algorithm based on my assumptions of the problem.
+     * Duplicate IDs are dups. Duplicate emails are dups. *Both* are unique in that
+     * an ID can only occur *once* and an email can only occur *once* no matter which
+     * ID has what email. If we analyze the resulting list of Leads by ID, the resulting
+     * ID list is a set (each element is unique). Likewise, if we analyze the resulting
+     * list of Leads by email, the resulting email list is a set.
+     *
+     * Example:
+     * [
+     *     {id: "1", email: "test1@example.com", date: "2024-12-01", ... },
+     *     {id: "2", email: "test1@example.com", date: "2024-12-01", ... },
+     *     {id: "1", email: "test2@example.com", date: "2024-12-01", ... },
+     *     {id: "2", email: "test2@example.com", date: "2024-12-01", ... }
+     * ]
+     * should become
+     * [
+     *     {id: "2", email: "test1@example.com", date: "2024-12-01", ... },
+     *     {id: "1", email: "test2@example.com", date: "2024-12-01", ... }
+     * ]
+     *
+     * Explanation:
+     * The first two rows are duplicates, because same email. Between the first two rows,
+     * the second row is kept, because it comes later in the list. The third row is kept,
+     * because the only row kept so far is the second row, and the ids and emails are unique
+     * from each other. The fourth row is discarded, because it has the same id as the second
+     * row (first kept row) and same email as the third row (second kept row).
+     *
+     * @param leads The original list of leads that may have duplicates as defined above.
+     * @return The resulting list of leads without duplicates and the changelogs needed to get
+     *      from the original list of leads to the resulting list of leads.
+     */
     private static LeadChangeLogPair removeDuplicates(List<Lead> leads) {
-        /*
-        HERE IS MY ASSUMPTION OF THE RULES:
-        Duplicate IDs are dups. Duplicate emails are dups. *Both* are unique in that
-        an ID can only occur *once* and an email can only occur *once* no matter which
-        ID has what email. If we analyze the resulting list of Leads by ID, the resulting
-        ID list is a set (each element is unique). Likewise, if we analyze the resulting
-        list of Leads by email, the resulting email list is a set.
-
-        Example:
-        [
-            {id: "1", email: "test1@example.com", date: "2024-12-01", ... },
-            {id: "2", email: "test1@example.com", date: "2024-12-01", ... },
-            {id: "1", email: "test2@example.com", date: "2024-12-01", ... },
-            {id: "2", email: "test2@example.com", date: "2024-12-01", ... }
-        ]
-        should become
-        [
-            {id: "2", email: "test1@example.com", date: "2024-12-01", ... },
-            {id: "1", email: "test2@example.com", date: "2024-12-01", ... }
-        ]
-
-        Explanation:
-        The first two rows are duplicates, because same email. Between the first two rows,
-        the second row is kept, because it comes later in the list. The third row is kept,
-        because the only row kept so far is the second row, and the ids and emails are unique
-        from each other. The fourth row is discarded, because it has the same id as the second
-        row (first kept row) and same email as the third row (second kept row).
-        */
         List<Lead> noDupsLeads = new ArrayList<>();
         List<ChangeLog> changeLogs = new ArrayList<>();
         Set<String> seenIds = new HashSet<>();
@@ -156,6 +185,12 @@ public class Main {
         return new LeadChangeLogPair(noDupsLeads, changeLogs);
     }
 
+    /*
+     * Writes the result list of leads to a file in JSON format relevant to the original JSON file.
+     *
+     * @param leads The list of leads.
+     * @param inFileName The original JSON file name.
+     */
     private static void outputResults(List<Lead> leads, String inFileName) throws IOException {
         String outFileName = inFileName.substring(0, inFileName.lastIndexOf('.')) + "-dupless.json";
         String jsonString = "{\"leads\":" + leads.toString() + "\n}";
@@ -170,10 +205,10 @@ public class Main {
         String fileName = args[0];
 
         System.out.println("[STEP 1]: Getting JSON data from file: " + fileName);
-        JSONObject jsonObject = fileNameToJSONObject(fileName);
+        JSONObject leadsJsonObject = fileNameToJSONObject(fileName);
 
         System.out.println("[STEP 2]: Transform JSONObject to a list of Leads");
-        List<Lead> leads = jsonObjectToList(jsonObject);
+        List<Lead> leads = jsonObjectToList(leadsJsonObject);
 
         System.out.println("[STEP 3]: Remove duplicates from the list of Leads");
         LeadChangeLogPair leadChangelogPair = removeDuplicates(leads);
@@ -181,7 +216,7 @@ public class Main {
         List<ChangeLog> changeLogs = leadChangelogPair.changeLogs;
 
         System.out.println("[STEP 4]: Output the results!");
-        printChangeLogs(changeLogs, fileName);
+        outputChangeLogs(changeLogs, fileName);
         outputResults(noDupsLeads, fileName);
     }
 }
