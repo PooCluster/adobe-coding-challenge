@@ -36,6 +36,14 @@ public class Main {
         return leads;
     }
 
+    private static void printChangeLogs(List<ChangeLog> changeLogs) {
+        System.out.println("CHANGE LOGS:");
+        for (ChangeLog changeLog : changeLogs) {
+            System.out.println(changeLog);
+        }
+        System.out.println();
+    }
+
     private static List<Lead> removeDuplicates(List<Lead> leads) {
         /*
         HERE IS MY ASSUMPTION OF THE RULES:
@@ -66,6 +74,7 @@ public class Main {
         row (first kept row) and same email as the third row (second kept row).
         */
         List<Lead> noDupsLeads = new ArrayList<>();
+        List<ChangeLog> changeLogs = new ArrayList<>();
         Set<String> seenIds = new HashSet<>();
         Set<String> seenEmails = new HashSet<>();
 
@@ -114,7 +123,7 @@ public class Main {
                                 // bothEqual: no-op
                             }
                             noDupsLeads.set(i, lead);
-                            // TODO: handle log of changes (we're changing seenLeads)
+                            changeLogs.add(new ChangeLog(commitedLead, lead));
                             replaced = true;
                         }
                     }
@@ -126,6 +135,8 @@ public class Main {
                 noDupsLeads.add(lead);
             }
         }
+
+        printChangeLogs(changeLogs);
 
         return noDupsLeads;
     }
