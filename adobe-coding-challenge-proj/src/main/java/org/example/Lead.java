@@ -1,7 +1,6 @@
 package org.example;
 
-import org.json.JSONObject;
-
+// Lead stores the data to be stored within a lead JSON object for this particular program.
 public class Lead {
     private String id;
     private String email;
@@ -31,31 +30,8 @@ public class Lead {
         return email;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
     public String getEntryDate() {
         return entryDate;
-    }
-
-    public JSONObject toJSONObject() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("_id", id);
-        jsonObject.put("email", email);
-        jsonObject.put("firstName", firstName);
-        jsonObject.put("lastName", lastName);
-        jsonObject.put("address", address);
-        jsonObject.put("entryDate", entryDate);
-        return jsonObject;
     }
 
     @Override

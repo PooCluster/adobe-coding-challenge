@@ -1,5 +1,6 @@
 package org.example;
 
+// ChangeLog stores the recorded change of one Lead to another to derive a valid list of leads.
 public class ChangeLog {
     private Lead from;
     private Lead to;
